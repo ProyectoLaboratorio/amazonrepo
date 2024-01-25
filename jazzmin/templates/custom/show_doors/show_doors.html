@@ -1,0 +1,108 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+<script src="{% static 'custom/jquery-3.6.4.min.js' %}"></script>
+
+
+</script>
+
+  <style>
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    label {
+      margin-bottom: 10px;
+    }
+
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+
+    .radio-group {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Parámetros puerta</title>
+  </head>
+<body>
+  <form id="my-form">
+  {% csrf_token %}
+  <h1>Configuración de la Puerta</h1>
+  <p>Device: {{ device }}</p>
+  <label for="doorName">Nombre de la Puerta:</label>
+  <input type="text" id="doorName" name="doorName" value="{{ doorName }}" required><br>
+
+  <label for="magneticType">Al contacto:</label>
+    <div class="radio-group">
+      <input type="radio" id="magneticTypeOpen" name="magneticType" value="alwaysOpen" {% if magneticType == "alwaysOpen" %}checked{% endif %}>
+      <label for="magneticTypeOpen">Abrirse</label>
+      <input type="radio" id="magneticTypeClose" name="magneticType" value="alwaysClose" {% if magneticType == "alwaysClose" %}checked{% endif %}>
+      <label for="magneticTypeClose">Seguir cerrada</label>
+    </div>
+
+  <label for="openButtonType">Al presionar botón salida:</label>
+     <div class="radio-group">
+      <input type="radio" id="openButtonTypeOpen" name="openButtonType" value="alwaysOpen" {% if openButtonType == "alwaysOpen" %}checked{% endif %}>
+      <label for="openButtonTypeOpen">Abrirse</label>
+      <input type="radio" id="openButtonTypeClose" name="openButtonType" value="alwaysClose" {% if openButtonType == "alwaysClose" %}checked{% endif %}>
+      <label for="openButtonTypeClose">Seguir cerrada</label>
+    </div>
+
+    <label for="LockType_status">Al desconectar la energía:</label>
+     <div class="radio-group">
+      <input type="radio" id="LockType_statusOpen" name="LockType_status" value="alwaysOpen" {% if LockType_status == "alwaysOpen" %}checked{% endif %}>
+      <label for="LockType_statusOpen">Abrirse</label>
+      <input type="radio" id="LockType_statusClose" name="LockType_status" value="alwaysClose" {% if LockType_status == "alwaysClose" %}checked{% endif %}>
+      <label for="LockType_statusClose">Seguir cerrada</label>
+    </div>
+
+  <label for="openDuration">Duración Abierta (s):</label>
+  <input type="text" id="openDuration" name="openDuration" value="{{ openDuration }}" required><br>
+
+  <label for="disabledOpenDuration">Duración abierta extendida (s):</label>
+  <input type="text" id="disabledOpenDuration" name="disabledOpenDuration" value="{{ disabledOpenDuration }}" required><br>
+
+  <label for="magneticAlarmTimeout">Alarma de tiempo límite abierta: (s):</label>
+  <input type="text" id="magneticAlarmTimeout" name="magneticAlarmTimeout" value="{{ magneticAlarmTimeout }}" required><br>
+
+  <label for="leaderCardOpenDuration">Duración puerta abierta desde primera persona (m):</label>
+  <input type="text" id="leaderCardOpenDuration" name="leaderCardOpenDuration" value="{{ leaderCardOpenDuration }}" required><br>
+
+  <button id="my-button" type="submit">Enviar</button>
+</form>
+</body>
+</html>
+
+<script>
+
+    $('#my-button').click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: '{% url 'get_doors' device %}',
+        type: 'POST',
+        data: $('#my-form').serialize(),
+        success: function(data) {
+          console.log(data)
+          table.setData(data.events);
+        },
+        error: function(xhr, status, error) {
+          console.log('Error:', error);
+        }
+      });
+    });
+</script>
+
+{% endblock %}

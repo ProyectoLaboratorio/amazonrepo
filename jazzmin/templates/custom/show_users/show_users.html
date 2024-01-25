@@ -1,0 +1,26 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block content %}
+  {% block extrahead %}
+    <link href="{% static 'custom/tabulator-master/dist/css/tabulator_bootstrap3.min.css' %}" rel="stylesheet">
+    <script src="{% static 'custom/tabulator-master/dist/js/tabulator.min.js' %}"></script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      #tabla {
+        height: 100%;
+      }
+    </style>
+  {% endblock %}
+
+  <div id="tabla" data-device="{{ device }}"></div>
+
+  {% block scripts %}
+    <script src="{% static 'custom/show_users/show_users.js' %}"></script>
+  {% endblock %}
+{% endblock %}

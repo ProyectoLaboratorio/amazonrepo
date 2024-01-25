@@ -1,0 +1,19 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+
+{% if years %}
+    <ul>
+        {% for year in years %}
+            <li><a href="{% url 'schedule_career' year.1 year.0 %}">{{ year.0 }} </a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay años disponibles.</p>
+{% endif %}
+
+
+
+{% endblock %}
+
+

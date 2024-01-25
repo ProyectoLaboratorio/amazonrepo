@@ -1,0 +1,133 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block content %}
+  {% block extrahead %}
+    <link href="{% static 'custom/tabulator-master/dist/css/tabulator_bootstrap3.min.css' %}" rel="stylesheet">
+    <script src="{% static 'custom/tabulator-master/dist/js/tabulator.min.js' %}"></script>
+    <link href="{% static 'custom/flatpickr/flatpickr.min.css' %}" rel="stylesheet">
+    <script src="{% static 'custom/flatpickr/flatpickr.min.js' %}"></script>
+
+  {% endblock %}
+
+
+
+
+<script src="{% static 'custom/jquery-3.6.4.min.js' %}"></script>
+
+
+<style>
+  #my-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .form-group input {
+    display: block;
+    width: 100%;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+</style>
+
+<div id="form-container">
+  <form id="my-form">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="usuario">Usuario num.</label>
+      <input type="text" name="usuario" id="usuario">
+    </div>
+    <div class="form-group">
+      <label for="grupoevento">Grupo de evento</label>
+      <input type="text" name="grupoevento" id="grupoevento">
+    </div>
+    <div class="form-group">
+      <label for="tipoevento">Tipo de evento</label>
+      <input type="text" name="tipoevento" id="tipoevento">
+    </div>
+    <div class="form-group">
+      <label for="desde">Desde</label>
+      <input type="text" name="desde" id="desde" data-input="datetime-local" data-enable-time="true">
+    </div>
+    <div class="form-group">
+      <label for="hasta">Hasta</label>
+      <input type="text" name="hasta" id="hasta" data-input="datetime-local" data-enable-time="true">
+    </div>
+  </form>
+</div>
+
+
+<div id="my-table"></div>
+<form id="my-form">
+  <!-- input fields here -->
+  <button id="my-button" type="submit">Enviar</button>
+</form>
+
+<script>
+  $(document).ready(function() {
+    var table = new Tabulator("#my-table", {
+      layout: "fitColumns",
+      pagination: "local",
+      paginationSize: 50,
+      paginationSizeSelector: [50, 100, 150],
+      columns: [
+        { title: "Employee No.", field: "employeeNoString", headerFilter:true},
+        { title: "Name", field: "name", headerFilter:true},
+        { title: "Major", field: "major", headerFilter:true},
+        { title: "Minor", field: "minor", headerFilter:true},
+        { title: "Time", field: "time", headerFilter:true},
+        { title: "Door No.", field: "doorNo", headerFilter:true},
+        { title: "User Type", field: "userType", headerFilter:true},
+        { title: "Current Verify Mode", field: "currentVerifyMode", headerFilter:true},
+        { title: "Picture URL", field: "pictureURL", headerFilter:true},
+      ],
+    });
+
+    $('#my-button').click(function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: '{% url 'get_events' device %}',
+        type: 'POST',
+        data: $('#my-form').serialize(),
+        success: function(data) {
+          console.log(data)
+          table.setData(data.events);
+        },
+        error: function(xhr, status, error) {
+          console.log('Error:', error);
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  flatpickr('#desde', {
+    enableTime: true,
+    dateFormat: 'Y-m-dTH:i:S-03:00'
+  });
+
+  flatpickr('#hasta', {
+    enableTime: true,
+    dateFormat: 'Y-m-dTH:i:S-03:00'
+  });
+});
+</script>
+
+{% block scripts %}
+    <script src="{% static 'custom/show_events/show_events.js' %}"></script>
+  {% endblock %}
+{% endblock %}

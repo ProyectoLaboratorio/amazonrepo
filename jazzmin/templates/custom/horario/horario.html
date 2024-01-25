@@ -1,0 +1,36 @@
+{% extends 'admin/base_site.html' %}
+
+{% load static %}
+
+{% block content %}
+  {% block extrahead %}
+    <link href="{% static 'custom/tabulator-master/dist/css/tabulator_bootstrap3.min.css' %}" rel="stylesheet">
+    <script src="{% static 'custom/tabulator-master/dist/js/tabulator.min.js' %}"></script>
+  {% endblock %}
+
+<div id="horario"></div>
+
+<script>
+  var tabla = new Tabulator("#horario", {
+    layout: "fitDataStretch",
+    columns: [
+      {title: "Hora", field: "Hora", headerSort: false},
+      {title: "Lunes", field: "Lunes", headerSort: false},
+      {title: "Martes", field: "Martes", headerSort: false},
+      {title: "Miércoles", field: "Miércoles", headerSort: false},
+      {title: "Jueves", field: "Jueves", headerSort: false},
+      {title: "Viernes", field: "Viernes", headerSort: false}
+    ],
+    data: [
+      {% for fila in tabla %}
+        {Hora: "{{ fila.0 }}", Lunes: "{{ fila.1 }}", Martes: "{{ fila.2 }}", Miércoles: "{{ fila.3 }}", Jueves: "{{ fila.4 }}", Viernes: "{{ fila.5 }}"},
+      {% endfor %}
+    ]
+  });
+</script>
+
+
+
+{% endblock %}
+
+

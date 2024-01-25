@@ -1,0 +1,101 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% block content %}
+<script src="{% static 'custom/jquery-3.6.4.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+  $('#my-form button').click(function(event) {
+    event.preventDefault();
+    
+    var device = $(this).attr('data-value');
+    var url = '/video/open_door/' + device;
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: $('#my-form').serialize(),
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  });
+});
+</script>
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Transmisión de video</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f2f2f2;
+      }
+      #video-container {
+        width: 100vh;
+        height: 600px;
+        box-sizing: border-box;   
+      }
+      #container {
+        display: flex;
+        flex-direction: column;
+        align-items: top;
+        justify-content: top;
+        height: 100vh;
+      }
+      #video {
+        border: 5px solid black;
+        background-color: #000000;
+      }
+      #form-container {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #my-form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #my-form button {
+        padding: 10px 20px;
+        background-color: #28B62C;
+        color: #white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-left: 20px;
+        font-weight: bold;
+        font-size: small;
+        border-bottom: 5px solid #23A127;
+      }
+      #my-form button:hover {
+        background-color: #333333;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+        <div id="video-container">
+            <iframe src=" {{ link }}" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+            <div id="form-container">
+              <form id="my-form">
+                {% for device in devices %}
+                  {% csrf_token %}
+                  <button type="submit" data-value="{{ device }}">Puerta {{ device }}</button>
+                {% endfor %}
+              </form>
+            </div>
+    </div>
+  </body>
+</html>
+
+
+{% endblock %}
