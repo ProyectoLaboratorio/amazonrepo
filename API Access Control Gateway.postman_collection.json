@@ -1,0 +1,982 @@
+{
+	"info": {
+		"_postman_id": "2d1689ec-779f-44fb-9965-3ba1ffe53965",
+		"name": "API Access Control Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22884441"
+	},
+	"item": [
+		{
+			"name": "Ver la informacion del dispositivo (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/System/deviceInfo",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"System",
+						"deviceInfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver estado de trabajo del dispositivo (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/AcsWorkStatus?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"AcsWorkStatus"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver capacidades de dispositivo (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/System/capabilities?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"System",
+						"capabilities"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ejecutar relevador XML (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<RemoteControlDoor xmlns=\"http://www.isapi.org/ver20/XMLSchema\" version=\"2.0\">\r\n    <cmd>open</cmd>\r\n</RemoteControlDoor>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/RemoteControl/door/:id?format=xml&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"RemoteControl",
+						"door",
+						":id"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "xml"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear usuario (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserInfo\": {\r\n        \"employeeNo\": \"7\",\r\n        \"name\": \"Xavier2\",\r\n        \"userType\": \"normal\",\r\n        \"Valid\": {\r\n            \"enable\": true,\r\n            \"beginTime\": \"2017-01-01T00:00:00\",\r\n            \"endTime\": \"2025-08-01T17:30:08\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/UserInfo/Record?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"UserInfo",
+						"Record"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar usuario (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserInfoDetail\": {\r\n        \"mode\": \"byEmployeeNo\",\r\n        \"EmployeeNoList\": [\r\n            {\r\n                \"employeeNo\": \"5\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/UserInfoDetail/Delete?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"UserInfoDetail",
+						"Delete"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar usuarios (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserInfoSearchCond\":\r\n    {\r\n        \"searchID\":\"0\",\r\n        \"searchResultPosition\":0,\r\n        \"maxResults\":30\r\n    }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/UserInfo/Search?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"UserInfo",
+						"Search"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar info por usuario (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserInfoSearchCond\":\r\n    {\r\n        \"searchID\":\"1\",\r\n        \"searchResultPosition\": 0,\r\n        \"maxResults\": 1\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/UserInfo/Search?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"UserInfo",
+						"Search"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar tarjeta (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"CardInfo\": {\r\n        \"employeeNo\": \"43284253\",\r\n        \"cardNo\": \"123456789\",\r\n        \"cardType\": \"normalCard\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/CardInfo/Record?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"CardInfo",
+						"Record"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar no tarjeta por no. empleado (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"CardInfoSearchCond\": {\r\n        \"searchID\": \"0\",\r\n        \"searchResultPosition\": 0,\r\n        \"maxResults\": 30,\r\n        \"CardNoList\": [\r\n            {\r\n                \"cardNo\": \"123456789\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/CardInfo/Search?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"CardInfo",
+						"Search"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar tarjeta (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"CardInfoDelCond\": {\r\n        \"CardNoList\": [\r\n            {\r\n                \"cardNo\": \"123456789\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/CardInfo/Delete?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"CardInfo",
+						"Delete"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar rostro (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"faceURL\": \"https://www.ecartelera.com/images/sets/7000/7097.jpg\",\r\n    \"faceLibType\": \"blackFD\",\r\n    \"FDID\": \"1\",\r\n    \"FPID\": \"4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/Intelligent/FDLib/FaceDataRecord?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"Intelligent",
+						"FDLib",
+						"FaceDataRecord"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar rostro (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"FaceInfoDelCond\": {\r\n        \"faceLibType\": \"blackFD\",\r\n        \"EmployeeNoList\": [\r\n            {\r\n                \"employeeNo\": \"4\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/Intelligent/FDLib/FDSearch/Delete?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"Intelligent",
+						"FDLib",
+						"FDSearch",
+						"Delete"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener rostro usuario (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"maxResults\": 10,\r\n    \"searchResultPosition\": 0,\r\n    \"faceLibType\": \"blackFD\",\r\n    \"FDID\": \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/Intelligent/FDLib/FDSearch?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"Intelligent",
+						"FDLib",
+						"FDSearch"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Descarga de eventos (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"AcsEventCond\": {\r\n        \"searchID\": \"1\",\r\n        \"searchResultPosition\": 0,\r\n        \"maxResults\": 10,\r\n        \"major\": 0,\r\n        \"minor\": 0,\r\n        \"startTime\": \"2023-01-01T01:00:00-07:00\",\r\n        \"endTime\": \"2024-08-29T23:59:59-07:00\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/AcsEvent?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"AcsEvent"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Suscribirse a eventos (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"SubscribeDeviceMgmt\": {\r\n        \"eventMode\": \"all\",\r\n        \"defenceMode\": \"all\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/Event/notification/subscribeDeviceMgmt?format=json",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"Event",
+						"notification",
+						"subscribeDeviceMgmt"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modificar usuario (OK)",
+			"request": {
+				"auth": {
+					"type": "digest",
+					"digest": [
+						{
+							"key": "password",
+							"value": "{{device-password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{device-username}}",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "MD5",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserInfo\": {\r\n        \"employeeNo\": \"4\",\r\n        \"name\": \"Juan Perez\",\r\n        \"userType\": \"normal\",\r\n        \"Valid\": {\r\n            \"enable\": false,\r\n            \"beginTime\": \"2017-01-01T00:00:00\",\r\n            \"endTime\": \"2025-08-01T17:30:08\"\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{device-ip-http}}/ISAPI/AccessControl/UserInfo/Modify?format=json&devIndex={{device-uuid}}",
+					"host": [
+						"{{device-ip-http}}"
+					],
+					"path": [
+						"ISAPI",
+						"AccessControl",
+						"UserInfo",
+						"Modify"
+					],
+					"query": [
+						{
+							"key": "format",
+							"value": "json"
+						},
+						{
+							"key": "devIndex",
+							"value": "{{device-uuid}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

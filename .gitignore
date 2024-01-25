@@ -1,0 +1,9 @@
+*.py[co]
+*.sw[po]
+*~
+/secrets.json
+/API Access Control Gateway.postman_collection.json
+/workspace.postman_globals.json
+
+### VisualStudioCode ###
+.vscode/*

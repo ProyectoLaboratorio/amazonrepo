@@ -1,0 +1,19 @@
+
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '12345678';
+
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+
+CREATE DATABASE ic3unrafproject;
+
+USE ic3unrafproject;
+
+
+usuario para ingresar a la pag:
+admin
+unraf2024
+
+
+usuario base de datos:
+admin
+12345678

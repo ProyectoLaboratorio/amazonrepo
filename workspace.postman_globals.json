@@ -1,0 +1,39 @@
+{
+	"id": "fc6c4187-21a2-4a85-8cec-46cd38db1fc3",
+	"values": [
+		{
+			"key": "device-ip-http",
+			"value": "http://192.168.0.124:85",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "device-username",
+			"value": "admin",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "device-password",
+			"value": "unraf1234",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "device-uuid",
+			"value": "D76C6D74-4B20-4BB1-8C4C-B51244DF3026",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "localhost-test-api",
+			"value": "http://localhost:8000",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-08-28T16:43:20.011Z",
+	"_postman_exported_using": "Postman/10.17.4"
+}

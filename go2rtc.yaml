@@ -1,0 +1,22 @@
+api:
+  base_path: ''
+  listen: :1984
+  origin: ''
+  static_dir: ''
+rtsp:
+  listen: :8554
+  password: ''
+  username: ''
+srtp:
+  listen: :8443
+streams:
+  Aparato:
+  - rtsp://admin:unraf1234@181.189.221.10:554/Streaming/Channels/101
+webrtc:
+  candidates: []
+  ice_servers:
+  - credential: ''
+    urls:
+    - stun:stun.l.google.com:19302
+    username: ''
+  listen: :8555
