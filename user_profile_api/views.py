@@ -23,11 +23,13 @@ from user_profile_api.urls_services import (
     URL_UserRightWeekPlanCfg,
     URL_DOOR_1,
     URL_DOOR_LOCKTYPE,
+    URL_TWOWAYAUDIO,
 )
 import datetime
 import json, base64
 from django.http import JsonResponse
 import hashlib
+import random
 from .models import SubjectSchedule, Device
 from django.db.models import F
 import itertools
@@ -339,3 +341,150 @@ def show_events(request, device):
     print(device)
     lista_device = {'device': device}
     return render(request, "custom/show_events/show_events.html", lista_device)
+
+def activate_audio(request, device):
+    # Obtain necessary parameters for API requests
+    ip = Device.objects.filter(device=device).values_list('ip', flat=True).first()
+    base_url = "http://" + ip + ":85"
+    username = GATEWAY_USER
+    password = GATEWAY_PASSWORD
+
+    # Step 1: Get information of a two-way audio channel
+    channel_id = get_two_way_audio_channel_id(base_url, device, username, password)
+
+    if channel_id is not None:
+        # Step 2: Request audio stream URL
+        stream_url = request_audio_stream_url(base_url, device, username, password)
+
+        if stream_url is not None:
+            # Step 3: Describe method to get SDP information
+            sdp_info = describe_audio_stream(base_url, stream_url, username, password)
+
+            if sdp_info is not None:
+                # Step 4: Setup method to transmit audio stream
+                setup_audio_stream(base_url, sdp_info, username, password)
+
+                # Step 5: Play method to start two-way audio
+                play_audio_stream(base_url, stream_url, username, password)
+
+                return JsonResponse({'success': True})
+    
+    return JsonResponse({'success': False})
+
+def get_two_way_audio_channel_id(base_url, device_id, username, password):
+    # Call /ISAPI/System/TwoWayAudio/channels/<ID>?format=json&devIndex=<uuid>
+    channel_info_url = f'{base_url}/ISAPI/System/TwoWayAudio/channels/{device_id}?format=json&devIndex=<D76C6D74-4B20-4BB1-8C4C-B51244DF3026>'
+    headers = {
+        
+    }
+    response = requests.get(channel_info_url, headers=headers, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    if response.status_code == 200:
+        # Parse and extract the necessary information from the response
+        channel_info = response.json()
+        
+        # Call get_rtsp_authorization with the extracted information
+       # auth_header = get_rtsp_authorization(username, password, realm, nonce, uri)
+
+        # Continue with your logic, for example, printing the auth_header
+       # print(auth_header)
+
+        # Return the audio_channel_id or perform further actions
+        audio_channel_id = channel_info.get('audio_channel_id')
+        return audio_channel_id
+    
+    return None
+
+
+def request_audio_stream_url(base_url, device_id, username, password):
+    # Call /ISAPI/System/streamMedia?format=json&devIndex=<uuid> by POST method
+    stream_media_url = f'{base_url}/ISAPI/System/streamMedia?format=json&devIndex=<D76C6D74-4B20-4BB1-8C4C-B51244DF3026>'
+    headers = {
+        #'Authorization': get_rtsp_authorization(username, password),
+    }
+    response = requests.post(stream_media_url, headers=headers, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    if response.status_code == 200:
+        # Parse and extract the audio stream URL from the response
+        stream_info = response.json()
+        audio_stream_url = stream_info.get('audio_stream_url')
+        return audio_stream_url
+    
+    print(audio_stream_url)
+
+    return None
+
+def describe_audio_stream(base_url, stream_url, username, password):
+    # Step 3: Describe method to get SDP information
+    rtsp_url = f'{base_url}{stream_url}'
+    headers = {
+        #'Authorization': get_rtsp_authorization(username, password),
+    }
+    response = requests.describe(rtsp_url, headers=headers, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    if response.status_code == 200:
+        # Parse and extract SDP information from the response
+        sdp_info = parse_sdp_info(response.text)
+        return sdp_info
+
+    return None
+
+def setup_audio_stream(base_url, sdp_info, username, password):
+    # Step 4: Setup method to transmit audio stream
+    setup_url = f'{base_url}/setup'
+    headers = {
+       # 'Authorization': get_rtsp_authorization(username, password),
+        'Content-Type': 'application/sdp',
+    }
+    response = requests.setup(setup_url, headers=headers, data=sdp_info, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    return response.status_code == 200
+
+def play_audio_stream(base_url, stream_url, username, password):
+    # Step 5: Play method to start the two-way audio
+    play_url = f'{base_url}{stream_url}'
+    headers = {
+       # 'Authorization': get_rtsp_authorization(username, password),
+    }
+    response = requests.play(play_url, headers=headers, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    return response.status_code == 200
+
+def transmit_audio_data(base_url, stream_url, audio_data, username, password):
+    # Step 6: Transmit Audio Data
+    # Implement the logic to transmit audio data with binary format
+
+    # Example: Use requests library to make a POST request to the RTSP URL
+    audio_transmit_url = f'{base_url}{stream_url}'
+    headers = {
+       # 'Authorization': get_rtsp_authorization(username, password),
+        'Content-Type': 'application/octet-stream',  # Adjust content type based on your requirements
+    }
+    response = requests.post(audio_transmit_url, headers=headers, data=audio_data, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    return response.status_code == 200
+
+def teardown_audio_stream(base_url, stream_url, username, password):
+    # Step 7: TEARDOWN method to stop the two-way audio
+    teardown_url = f'{base_url}{stream_url}'
+    headers = {
+        #'Authorization': get_rtsp_authorization(username, password),
+    }
+    response = requests.teardown(teardown_url, headers=headers, auth=requests.auth.HTTPDigestAuth(GATEWAY_USER, GATEWAY_PASSWORD))
+    
+    return response.status_code == 200
+
+
+# Additional helper functions
+
+def parse_sdp_info(sdp_text):
+    sdp_info = {}
+    
+    lines = sdp_text.split('\n')
+    for line in lines:
+        parts = line.strip().split('=')
+        if len(parts) == 2:
+            key, value = parts
+            sdp_info[key] = value
+
+    return sdp_info

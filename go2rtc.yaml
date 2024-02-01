@@ -12,6 +12,7 @@ srtp:
 streams:
   Aparato:
   - rtsp://admin:unraf1234@181.189.221.10:554/Streaming/Channels/101
+  - isapi://admin:unraf1234@181.189.221.10:85/
 webrtc:
   candidates: []
   ice_servers:

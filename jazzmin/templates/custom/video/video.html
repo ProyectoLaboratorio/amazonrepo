@@ -5,25 +5,61 @@
 
 <script>
 $(document).ready(function() {
-  $('#my-form button').click(function(event) {
-    event.preventDefault();
-    
-    var device = $(this).attr('data-value');
-    var url = '/video/open_door/' + device;
+  // Function to activate two-way audio
+  function activateTwoWayAudio(device, csrfToken) {
+    var audioActivationUrl = '/audio/activate/' + device;
 
+    // Agrega la lógica para activar el two-way audio
     $.ajax({
-      url: url,
+      url: audioActivationUrl,
+      type: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      success: function(data) {
+        console.log(data);
+        // Aquí puedes agregar lógica adicional si es necesario
+      },
+      error: function(error) {
+        console.error('Error activating two-way audio:', error);
+      }
+    });
+  }
+
+  $('.open-door-btn').click(function(event) {
+    event.preventDefault();
+
+    var device = $(this).data('value');  // Use data() instead of attr() for data- attributes
+    var openDoorUrl = '/video/open_door/' + device;
+    var csrfToken = $('input[name=csrfmiddlewaretoken]').val();  // Get the CSRF token from the form
+
+    // Realiza la solicitud para abrir la puerta
+    $.ajax({
+      url: openDoorUrl,
       type: 'POST',
       data: $('#my-form').serialize(),
       success: function(data) {
         console.log(data);
+
+        // Agregar un botón específico para activar el two-way audio
+        var activateAudioButton = $('<button>')
+          .text('Activar 2-way Audio')
+          .addClass('activate-audio-btn')
+          .data('device', device)
+          .click(function() {
+            activateTwoWayAudio(device, csrfToken);
+          });
+
+        // Agregar el botón a un contenedor en tu formulario
+        $('#audio-controls-container').empty().append(activateAudioButton);
+      },
+      error: function(error) {
+        console.error('Error opening door:', error);
       }
     });
   });
 });
 </script>
-
-
 
 <html>
   <head>
@@ -54,6 +90,7 @@ $(document).ready(function() {
       #form-container {
         margin-top: 20px;
         display: flex;
+        flex-direction: column;  /* Updated to column layout */
         align-items: center;
         justify-content: center;
       }
@@ -62,20 +99,20 @@ $(document).ready(function() {
         align-items: center;
         justify-content: center;
       }
-      #my-form button {
+      .open-door-btn, .activate-audio-btn {
         padding: 10px 20px;
         background-color: #28B62C;
-        color: #white;
+        color: white;
         border: none;
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
-        margin-left: 20px;
+        margin-bottom: 10px;  /* Add margin between buttons */
         font-weight: bold;
         font-size: small;
         border-bottom: 5px solid #23A127;
       }
-      #my-form button:hover {
+      .open-door-btn:hover, .activate-audio-btn:hover {
         background-color: #333333;
       }
     </style>
@@ -85,17 +122,19 @@ $(document).ready(function() {
         <div id="video-container">
             <iframe src=" {{ link }}" width="100%" height="100%" frameborder="0"></iframe>
         </div>
-            <div id="form-container">
-              <form id="my-form">
-                {% for device in devices %}
-                  {% csrf_token %}
-                  <button type="submit" data-value="{{ device }}">Puerta {{ device }}</button>
-                {% endfor %}
-              </form>
-            </div>
+        <div id="form-container">
+          <form id="my-form">
+            {% csrf_token %}
+            {% for device in devices %}
+              <button type="button" data-value="{{ device }}" class="open-door-btn">Puerta {{ device }}</button>
+            {% endfor %}
+          </form>
+
+          <!-- Container for audio control buttons -->
+          <div id="audio-controls-container"></div>
+        </div>
     </div>
   </body>
 </html>
-
 
 {% endblock %}
